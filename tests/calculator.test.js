@@ -49,7 +49,7 @@ describe("Calculator Tests", () => {
     calculator.add(1, 2);
 
     // Check if the spy was called with the expected arguments
-    expect(addSpy.calledOnceWith(1, 2)).toBe(false);
+    expect(addSpy.calledOnceWith(1, 2)).toBe(true);
 
     // Optionally verify the result, though the main focus is on the spy
     addSpy.restore();
