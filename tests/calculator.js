@@ -1,4 +1,4 @@
-// calculator.js
+
 class Calculator {
     add(a, b) {
       return a + b;
@@ -18,6 +18,11 @@ class Calculator {
       }
       return a / b;
     }
+
+    arrSum(...arr) {
+        return Math.max(...arr);
+    }
+
   }
   
   module.exports = Calculator;
