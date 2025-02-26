@@ -19,7 +19,7 @@ jobs:
     - name: Get commit hash
       id: tag_info 
       run: |
-        COMMIT_HASH=${git rev-parse --short HEAD}
+        COMMIT_HASH=$(git rev-parse --short HEAD)
         CURRENT_DATE=$(date +'%Y%m%d%H%M%S')
 
         echo "Commit hash : $COMMIT_HASH"
