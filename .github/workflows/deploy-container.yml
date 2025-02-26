@@ -13,7 +13,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - run: docker build . -t rahkds/basic-restapi-node-task
-    - run: echo "${{secrets.DHUB_PASS}}" | docker login -u ${{secrets.DHUB_USER}} --password-stdin
-    - run: docker push rahkds/basic-restapi-node-task:latest
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Get commit hash
+      id: tag_info 
+      run: |
+        COMMIT_HASH=${git rev-parse --short HEAD}
+        CURRENT_DATE=$(date +'%Y%m%d%H%M%S')
+
+        echo "Commit hash : $COMMIT_HASH"
+        echo "Current date : $CURRENT_DATE"
+
+        echo "::set-output name=commit_hash::$COMMIT_HASH"
+        echo "::set-output name=current_date::$CURRENT_DATE"
+
+    - name: Build and push Docker image
+      - run: docker build . -t rahkds/basic-restapi-node-task
+      - run: echo "${{secrets.DHUB_PASS}}" | docker login -u ${{secrets.DHUB_USER}} --password-stdin
+      - run: docker push rahkds/basic-restapi-node-task:${{steps.tag_info.outputs.commit_hash}}-${{steps.tag_info.outputs.current_date}}
+      - run: docker push rahkds/basic-restapi-node-task:latest
