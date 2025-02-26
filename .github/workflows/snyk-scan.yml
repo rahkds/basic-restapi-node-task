@@ -1,0 +1,22 @@
+name: Snyk Scan
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  snyk_scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Snyk
+        uses: snyk/actions/setup@v2
+        with:
+          snyk-token: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Run Snyk test
+        run: snyk test
