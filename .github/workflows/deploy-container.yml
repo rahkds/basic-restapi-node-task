@@ -1,7 +1,7 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: PR integration pipeline
+name: Docker build pipeline
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
         echo "::set-output name=commit_hash::$COMMIT_HASH"
         echo "::set-output name=current_date::$CURRENT_DATE"
 
-    - run: docker build . -t rahkds/basic-restapi-node-task
+    - run: docker build . -t rahkds/basic-restapi-node-task:${{steps.tag_info.outputs.commit_hash}}-${{steps.tag_info.outputs.current_date}}
     - run: echo "${{secrets.DHUB_PASS}}" | docker login -u ${{secrets.DHUB_USER}} --password-stdin
     - run: docker push rahkds/basic-restapi-node-task:${{steps.tag_info.outputs.commit_hash}}-${{steps.tag_info.outputs.current_date}}
     - run: docker push rahkds/basic-restapi-node-task:latest
