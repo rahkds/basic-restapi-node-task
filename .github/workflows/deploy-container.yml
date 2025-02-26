@@ -29,6 +29,7 @@ jobs:
         echo "::set-output name=current_date::$CURRENT_DATE"
 
     - name: Build and push docker image
+      id: build image
       run: |
         docker build . -t rahkds/basic-restapi-node-task:${{steps.tag_info.outputs.commit_hash}}-${{steps.tag_info.outputs.current_date}}
         echo "${{secrets.DHUB_PASS}}" | docker login -u ${{secrets.DHUB_USER}} --password-stdin
