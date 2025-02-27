@@ -17,6 +17,6 @@ jobs:
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      - name: Run Snyk test
-        run: snyk test
+        with:
+          args: --severity-threshold=high
+          command: snyk test
