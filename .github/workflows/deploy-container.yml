@@ -28,6 +28,9 @@ jobs:
         echo "::set-output name=commit_hash::$COMMIT_HASH"
         echo "::set-output name=current_date::$CURRENT_DATE"
 
-    - run: docker build . -t rahkds/basic-restapi-node-task:${{steps.tag_info.outputs.commit_hash}}-${{steps.tag_info.outputs.current_date}}
-    - run: echo "${{secrets.DHUB_PASS}}" | docker login -u ${{secrets.DHUB_USER}} --password-stdin
-    - run: docker push rahkds/basic-restapi-node-task:${{steps.tag_info.outputs.commit_hash}}-${{steps.tag_info.outputs.current_date}}
+    - name: Build and push docker image
+      id: build image
+      run: |
+        docker build . -t rahkds/basic-restapi-node-task:${{steps.tag_info.outputs.commit_hash}}-${{steps.tag_info.outputs.current_date}}
+        echo "${{secrets.DHUB_PASS}}" | docker login -u ${{secrets.DHUB_USER}} --password-stdin
+        docker push rahkds/basic-restapi-node-task:${{steps.tag_info.outputs.commit_hash}}-${{steps.tag_info.outputs.current_date}}
