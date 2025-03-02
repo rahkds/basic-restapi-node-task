@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: node:${{ github.event.inputs.node_version }}
-      options: --user node
       env:
           NODE_ENV: development   
 
