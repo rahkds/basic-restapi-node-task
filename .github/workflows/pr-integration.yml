@@ -15,7 +15,7 @@ jobs:
         node-version: [v21.7.3]
     
     outputs:
-      node-version: ${{steps.setup-node.outputs.version}}
+      node-version: ${{steps.set_output.outputs.version}}
 
     steps:
     - name: Checkout code
@@ -27,6 +27,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
+    - name : set-output-variables
+      id: set_output
       run: echo "version=${{matrix.node-version}}" >> "$GITHUB_OUTPUT"
 
     - name : Install dependencies
@@ -62,6 +65,8 @@ jobs:
       with:
         args: --severity-threshold=high
         command: code test  
+      
+    - name: print-output-variables
       run: echo "node version from previous step == ${{needs.Run-unit-test.outputs.node-version}}"
 
   Sonar-scan:
