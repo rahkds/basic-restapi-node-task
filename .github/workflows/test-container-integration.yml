@@ -12,6 +12,7 @@ jobs:
   container-test-job:
     name: container test job
     runs-on: ubuntu-latest
+    timeout-minutes: 0.1
     container:
       image: node:${{ github.event.inputs.node_version }}
       env:
