@@ -16,7 +16,13 @@ jobs:
     container:
       image: node:${{ github.event.inputs.node_version }}
       env:
-          NODE_ENV: development   
+          NODE_ENV: development  
+
+    services:
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379 
 
     steps:
     - name: Checkout code
@@ -31,3 +37,7 @@ jobs:
         npm test
       env:
           CI: true   
+    
+    - name: Test Redis Service
+      run: |
+        docker exec redis redis-cli ping
