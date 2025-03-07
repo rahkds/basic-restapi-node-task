@@ -42,7 +42,12 @@ jobs:
           - 6379:6379 
 
     steps:
-    - name: Test Redis Service
+    - name: Wait for Redis to be ready
       run: |
-        docker exec redis redis-cli ping
+        echo "Waiting for Redis to be ready..."
+        until docker exec redis redis-cli ping | grep -q PONG; do
+          echo "Waiting for Redis..."
+          sleep 1
+        done
+        echo "Redis is ready!"
 
