@@ -46,9 +46,13 @@ jobs:
     - name: Wait for Redis to be ready
       run: |
         echo "Waiting for Redis to be ready..."
-        until docker exec redis redis-cli ping | grep -q PONG; do
+        until docker ps --filter "name=redis" --filter "status=running" -q; do
           echo "Waiting for Redis..."
           sleep 1
         done
         echo "Redis is ready!"
+
+    - name: Verify Redis connection
+      run: |
+        docker exec redis redis-cli ping
 
