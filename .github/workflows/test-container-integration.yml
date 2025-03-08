@@ -8,14 +8,19 @@ on:
         required: true
         default: '18'
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   container-test-job:
     name: container test job
     runs-on: ubuntu-latest
+    timeout-minutes: 1
     container:
       image: node:${{ github.event.inputs.node_version }}
       env:
-          NODE_ENV: development   
+          NODE_ENV: development
 
     steps:
     - name: Checkout code
@@ -29,4 +34,30 @@ jobs:
       run : |
         npm test
       env:
-          CI: true   
+          CI: true
+
+  service-test-job:
+    name: service container test job
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    services:
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379 
+
+    steps:
+    - name: Wait for Redis to be ready
+      run: |
+        echo "Waiting for Redis to be ready..."
+        until docker ps --filter "name=redis" --filter "status=running" -q; do
+          echo "Waiting for Redis..."
+          sleep 1
+        done
+        docker ps -a
+        echo "Redis is ready!"
+
+    - name: Verify Redis connection
+      run: |
+        docker exec redis redis-cli ping
+
