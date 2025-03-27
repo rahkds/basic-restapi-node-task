@@ -1,0 +1,36 @@
+
+services:
+  social-db:
+    image: mysql:8.0.29
+    environment:
+      # - MYSQL_DATABASE=user-social-platform
+      # - MYSQL_ROOT_PASSWORD=root
+    container_name: social-db
+    networks:
+      - social-app-network
+    volumes:
+      - "/usr/local/docker-mysql-data:/var/lib/mysql"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+
+  node-app:
+    build: ./
+    container_name: node-app
+    networks:
+      - social-app-network
+    environment:
+      - DB_HOST=social-db
+    depends_on:
+      social-db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+
+networks:
+  social-app-network:
+    driver: bridge
+  
